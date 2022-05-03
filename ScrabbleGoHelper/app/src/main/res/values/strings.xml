@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Scrabble Go Helper</string>
+    <string name="alpha">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 </resources>
