@@ -1,3 +1,4 @@
+/* (C)2024 */
 package com.mdias.scrabblegohelper
 
 import android.content.Intent
@@ -10,7 +11,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import mdias.scrabblegohelper.R
-
 
 class MainActivity : AppCompatActivity() {
     private var currentShelf: String = ""
@@ -36,43 +36,48 @@ class MainActivity : AppCompatActivity() {
 
         // add listeners
         findViewById<Button>(R.id.button).setOnClickListener { buttonClicked() }
-        findViewById<Button>(R.id.reset).setOnClickListener { this.currentShelf = ""; }
-        setTextChangeListener(
-            shelfField,
-            this.maxShelfLength,
-            ::getShelfImageViewId
-        )
+        findViewById<Button>(R.id.reset).setOnClickListener { this.currentShelf = "" }
+        setTextChangeListener(shelfField, this.maxShelfLength, ::getShelfImageViewId)
         setTextChangeListener(
             findViewById<EditText>(R.id.other_letters),
             this.maxExtraLength,
-            ::getExtraImageViewId
+            ::getExtraImageViewId,
         )
     }
 
     private fun setTextChangeListener(
         editText: EditText,
         maxLength: Int,
-        findImageViewFunc: (Int) -> Int
+        findImageViewFunc: (Int) -> Int,
     ) {
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
+        editText.addTextChangedListener(
+            object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {}
 
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {}
 
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-                displayTiles(s.toString().lowercase(), findImageViewFunc, maxLength)
-            }
-        })
+                override fun onTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    displayTiles(s.toString().lowercase(), findImageViewFunc, maxLength)
+                }
+            },
+        )
     }
 
-    private fun displayTiles(letters: String, findImageViewFunc: (Int) -> Int, maxLength: Int) {
+    private fun displayTiles(
+        letters: String,
+        findImageViewFunc: (Int) -> Int,
+        maxLength: Int,
+    ) {
         for (i in 0 until maxLength) {
             val tile: ImageView = findViewById<ImageView>(findImageViewFunc.invoke(i))
             if (i + 1 <= letters.length) {
@@ -84,8 +89,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getShelfImageViewId(tileToShow: Int): Int {
-        return when (tileToShow) {
+    private fun getShelfImageViewId(tileToShow: Int): Int =
+        when (tileToShow) {
             0 -> R.id.tile1
             1 -> R.id.tile2
             2 -> R.id.tile3
@@ -95,19 +100,17 @@ class MainActivity : AppCompatActivity() {
             6 -> R.id.tile7
             else -> -1
         }
-    }
 
-    private fun getExtraImageViewId(tileToShow: Int): Int {
-        return when (tileToShow) {
+    private fun getExtraImageViewId(tileToShow: Int): Int =
+        when (tileToShow) {
             0 -> R.id.extra_tile1
             1 -> R.id.extra_tile2
             2 -> R.id.extra_tile3
             else -> -1
         }
-    }
 
-    private fun getImageId(c: Char): Int {
-        return when (c) {
+    private fun getImageId(c: Char): Int =
+        when (c) {
             'a' -> R.drawable.a
             'b' -> R.drawable.b
             'c' -> R.drawable.c
@@ -136,15 +139,15 @@ class MainActivity : AppCompatActivity() {
             'z' -> R.drawable.z
             else -> -1
         }
-    }
 
     private fun buttonClicked() {
-
         this.currentShelf = findViewById<EditText>(R.id.shelf_letters).text.toString()
-        val wordList: ArrayList<ScoredWord> = Dictionary(this.baseContext).findScoredWords(
-            this.currentShelf,
-            findViewById<EditText>(R.id.other_letters).text.toString(),
-        )
+        val wordList: ArrayList<ScoredWord> =
+            Dictionary(this.baseContext)
+                .findScoredWords(
+                    this.currentShelf,
+                    findViewById<EditText>(R.id.other_letters).text.toString(),
+                )
 
         intent = Intent(this, ResultsActivity::class.java)
         intent.putExtra("word_list", wordList)
@@ -152,4 +155,3 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 }
-
